@@ -1,0 +1,132 @@
+<div class="hero-banner">
+    <span class="concept-pill mb-2"><i class="bi bi-terminal"></i> Bab 4: Tongkat Sihir Terminal</span>
+    <h1 class="fw-bold mb-2">Kamus Lengkap CLI <code>php susan</code> ⚡</h1>
+    <p class="lead mb-0 text-slate-300">Semua perintah ajaib terminal yang tersedia untuk mempermudah hidupmu saat ngoding.</p>
+</div>
+
+<div class="baby-card">
+    <h4 class="fw-bold mb-3">Daftar Lengkap Command</h4>
+    <p class="text-muted small">Ketik perintah ini di terminal root proyekmu:</p>
+
+    <div class="row g-3">
+        <!-- Dev Server -->
+        <div class="col-md-6">
+            <div class="cmd-card">
+                <div class="cmd-code">
+                    <span>php susan dev</span>
+                    <button class="btn-copy" onclick="copyText('php susan dev')"><i class="bi bi-clipboard"></i></button>
+                </div>
+                <strong class="text-primary">Jalankan Server Dev + Vite (Live Reload)</strong>
+                <p class="small text-muted mt-1 mb-0">Menjalankan server web PHP (port 8000) sekaligus server frontend Vite. Setiap kamu edit CSS/JS, browser otomatis update!</p>
+            </div>
+        </div>
+
+        <!-- Serve Standalone -->
+        <div class="col-md-6">
+            <div class="cmd-card">
+                <div class="cmd-code">
+                    <span>php susan serve [8080]</span>
+                    <button class="btn-copy" onclick="copyText('php susan serve 8080')"><i class="bi bi-clipboard"></i></button>
+                </div>
+                <strong class="text-primary">Jalankan PHP Web Server Saja</strong>
+                <p class="small text-muted mt-1 mb-0">Hanya menjalankan PHP built-in server tanpa Vite. Port opsional (default: 8000).</p>
+            </div>
+        </div>
+
+        <!-- Build Vite -->
+        <div class="col-md-6">
+            <div class="cmd-card">
+                <div class="cmd-code">
+                    <span>php susan build</span>
+                    <button class="btn-copy" onclick="copyText('php susan build')"><i class="bi bi-clipboard"></i></button>
+                </div>
+                <strong class="text-primary">Kompilasi Asset Production</strong>
+                <p class="small text-muted mt-1 mb-0">Mengompresi dan membundel CSS/JS ke folder <code>public/build/</code> siap upload ke hosting.</p>
+            </div>
+        </div>
+
+        <!-- Storage Link -->
+        <div class="col-md-6">
+            <div class="cmd-card">
+                <div class="cmd-code">
+                    <span>php susan storage:link</span>
+                    <button class="btn-copy" onclick="copyText('php susan storage:link')"><i class="bi bi-clipboard"></i></button>
+                </div>
+                <strong class="text-warning">Hubungkan Storage Publik (Symlink)</strong>
+                <p class="small text-muted mt-1 mb-0">Membuat jembatan penghubung <code>public/storage -> storage/app/public</code> agar file yang diupload bisa dibuka browser.</p>
+            </div>
+        </div>
+
+        <!-- Migrate -->
+        <div class="col-md-6">
+            <div class="cmd-card">
+                <div class="cmd-code">
+                    <span>php susan migrate</span>
+                    <button class="btn-copy" onclick="copyText('php susan migrate')"><i class="bi bi-clipboard"></i></button>
+                </div>
+                <strong class="text-success">Jalankan Migrasi Database</strong>
+                <p class="small text-muted mt-1 mb-0">Mengeksekusi semua file migrasi baru di <code>database/migrations/</code> dan mencatat batch ke database.</p>
+            </div>
+        </div>
+
+        <!-- Migrate Rollback -->
+        <div class="col-md-6">
+            <div class="cmd-card">
+                <div class="cmd-code">
+                    <span>php susan migrate:rollback</span>
+                    <button class="btn-copy" onclick="copyText('php susan migrate:rollback')"><i class="bi bi-clipboard"></i></button>
+                </div>
+                <strong class="text-danger">Batalkan Migrasi Terakhir</strong>
+                <p class="small text-muted mt-1 mb-0">Mengembalikan (rollback) perubahan batch migrasi terakhir yang baru dijalankan.</p>
+            </div>
+        </div>
+
+        <!-- Make Middleware -->
+        <div class="col-md-6">
+            <div class="cmd-card">
+                <div class="cmd-code">
+                    <span>php susan make:middleware CheckRole</span>
+                    <button class="btn-copy" onclick="copyText('php susan make:middleware CheckRole')"><i class="bi bi-clipboard"></i></button>
+                </div>
+                <strong class="text-danger">Buat Middleware Satpam Baru</strong>
+                <p class="small text-muted mt-1 mb-0">Membuat file class middleware baru di <code>app/middlewares/CheckRoleMiddleware.php</code>.</p>
+            </div>
+        </div>
+
+        <!-- Make Controller -->
+        <div class="col-md-6">
+            <div class="cmd-card">
+                <div class="cmd-code">
+                    <span>php susan make:controller Order</span>
+                    <button class="btn-copy" onclick="copyText('php susan make:controller Order')"><i class="bi bi-clipboard"></i></button>
+                </div>
+                <strong class="text-primary">Buat Controller CRUD Otomatis</strong>
+                <p class="small text-muted mt-1 mb-0">Menghasilkan file <code>app/controllers/OrderController.php</code> lengkap dengan method index, create, store, edit, update, delete.</p>
+            </div>
+        </div>
+
+        <!-- Make Model -->
+        <div class="col-md-6">
+            <div class="cmd-card">
+                <div class="cmd-code">
+                    <span>php susan make:model Order -m</span>
+                    <button class="btn-copy" onclick="copyText('php susan make:model Order -m')"><i class="bi bi-clipboard"></i></button>
+                </div>
+                <strong class="text-primary">Buat Model (+ Migrasi dengan -m)</strong>
+                <p class="small text-muted mt-1 mb-0">Membuat file model di <code>app/models/Order.php</code> dan otomatis membuat file migrasi jika memakai flag <code>-m</code>.</p>
+            </div>
+        </div>
+
+        <!-- Route List -->
+        <div class="col-md-6">
+            <div class="cmd-card">
+                <div class="cmd-code">
+                    <span>php susan route:list</span>
+                    <button class="btn-copy" onclick="copyText('php susan route:list')"><i class="bi bi-clipboard"></i></button>
+                </div>
+                <strong class="text-info">Tampilkan Tabel Semua Route & Middleware</strong>
+                <p class="small text-muted mt-1 mb-0">Melihat daftar semua URI, Method (GET, POST, PUT, DELETE), Action, dan Middleware yang terpasang.</p>
+            </div>
+        </div>
+    </div>
+</div>

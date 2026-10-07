@@ -1,0 +1,460 @@
+#!/usr/bin/env php
+<?php
+// susan - Native Command Line Interface (CLI) Engine untuk Inainu MVC
+// Penggunaan: php susan <command> [argument]
+
+define('CLI_MODE', true);
+
+// Muat Environment & Core Application
+require_once __DIR__ . '/app/init.php';
+require_once __DIR__ . '/migrate.php';
+
+// ANSI Color formatting helper
+class Console {
+    public static function color(string $text, string $colorCode): string {
+        return "\033[{$colorCode}m{$text}\033[0m";
+    }
+
+    public static function success(string $text): void {
+        echo self::color(" ✔ {$text}", "32") . "\n";
+    }
+
+    public static function info(string $text): void {
+        echo self::color(" ℹ {$text}", "36") . "\n";
+    }
+
+    public static function warn(string $text): void {
+        echo self::color(" ⚠ {$text}", "33") . "\n";
+    }
+
+    public static function error(string $text): void {
+        echo self::color(" ✖ {$text}", "31") . "\n";
+    }
+
+    public static function title(string $text): void {
+        echo "\n" . self::color("=== {$text} ===", "35") . "\n";
+    }
+}
+
+// Handler Command Line Arguments
+$command = $argv[1] ?? 'list';
+$argument = $argv[2] ?? null;
+
+switch ($command) {
+    case 'serve':
+        $port = '8000';
+        // Dukung format php susan serve 8080 atau php susan serve --port=8080
+        if (!empty($argument)) {
+            if (strpos($argument, '--port=') === 0) {
+                $port = substr($argument, 7);
+            } else {
+                $port = $argument;
+            }
+        }
+
+        echo "\n\033[35m  ____                                \033[0m\n";
+        echo "\033[35m / ___| _   _ ___  __ _ _ __          \033[0m\n";
+        echo "\033[35m \___ \| | | / __|/ _` | '_ \         \033[0m\n";
+        echo "\033[35m  ___) | |_| \__ \ (_| | | | |        \033[0m\n";
+        echo "\033[35m |____/ \__,_|___/\__,_|_| |_|        \033[0m  \033[37mv1.0 (Native Edition)\033[0m\n\n";
+
+        Console::info("Susan Development Server aktif di: " . Console::color("http://127.0.0.1:{$port}", "32;1"));
+        Console::info("Tekan [Ctrl+C] untuk menghentikan server.\n");
+        passthru("php -S 127.0.0.1:{$port} -t public");
+        break;
+
+    case 'dev':
+        $port = $argument ?? '8000';
+        $hotFile = __DIR__ . '/public/hot';
+        $viteUrl = 'http://127.0.0.1:5173';
+        file_put_contents($hotFile, $viteUrl);
+
+        echo "\n\033[35m  ____                                \033[0m\n";
+        echo "\033[35m / ___| _   _ ___  __ _ _ __          \033[0m\n";
+        echo "\033[35m \___ \| | | / __|/ _` | '_ \         \033[0m\n";
+        echo "\033[35m  ___) | |_| \__ \ (_| | | | |        \033[0m\n";
+        echo "\033[35m |____/ \__,_|___/\__,_|_| |_|        \033[0m  \033[37mFull-Stack Dev Engine\033[0m\n\n";
+
+        Console::info("Menjalankan PHP Server + Vite HMR Dev Server secara bersamaan...");
+        Console::info("Aplikasi Web PHP  : " . Console::color("http://127.0.0.1:{$port}", "32;1") . " \033[90m(Buka URL ini di browser)\033[0m");
+        Console::info("Asset Vite Server : " . Console::color($viteUrl, "36;1"));
+        Console::info("Tekan [Ctrl+C] untuk menghentikan kedua server sekaligus.\n");
+
+        // 1. Jalankan PHP Built-in Server
+        $phpCmd = "php -S 127.0.0.1:{$port} -t public";
+        $phpProc = proc_open($phpCmd, [
+            0 => ['pipe', 'r'],
+            1 => ['pipe', 'w'],
+            2 => ['pipe', 'w']
+        ], $phpPipes);
+
+        // 2. Jalankan Vite Dev Server
+        $viteCmd = "npx vite";
+        $viteProc = proc_open($viteCmd, [
+            0 => ['pipe', 'r'],
+            1 => ['pipe', 'w'],
+            2 => ['pipe', 'w']
+        ], $vitePipes);
+
+        $cleanup = function() use (&$phpProc, &$viteProc, $hotFile) {
+            if (file_exists($hotFile)) {
+                @unlink($hotFile);
+            }
+            if (is_resource($phpProc)) {
+                proc_terminate($phpProc);
+            }
+            if (is_resource($viteProc)) {
+                proc_terminate($viteProc);
+            }
+            echo "\n" . Console::color(" ✔ Server berhasil dimatikan dengan aman.", "33") . "\n";
+            exit(0);
+        };
+
+        if (function_exists('pcntl_signal')) {
+            pcntl_signal(SIGINT, $cleanup);
+            pcntl_signal(SIGTERM, $cleanup);
+        }
+
+        while (true) {
+            if (function_exists('pcntl_signal_dispatch')) {
+                pcntl_signal_dispatch();
+            }
+
+            $phpStatus = proc_get_status($phpProc);
+            $viteStatus = proc_get_status($viteProc);
+
+            if (!$phpStatus['running'] || !$viteStatus['running']) {
+                $cleanup();
+                break;
+            }
+
+            usleep(200000);
+        }
+        break;
+
+    case 'build':
+        Console::title("Mengompilasi Asset Frontend (Vite Production Build)");
+        passthru("npx vite build");
+        $hotFile = __DIR__ . '/public/hot';
+        if (file_exists($hotFile)) {
+            unlink($hotFile);
+        }
+        Console::success("Kompilasi asset selesai! File siap untuk mode hosting/production.");
+        break;
+
+    case 'migrate':
+        $runner = new MigrationRunner();
+        $runner->applyMigrations();
+        if (in_array('--seed', $argv)) {
+            $runner->seed();
+        }
+        break;
+
+    case 'migrate:rollback':
+        $runner = new MigrationRunner();
+        $runner->rollback();
+        break;
+
+    case 'migrate:status':
+        $runner = new MigrationRunner();
+        $runner->status();
+        break;
+
+    case 'db:seed':
+        $runner = new MigrationRunner();
+        $runner->seed();
+        break;
+
+    case 'make:controller':
+        if (!$argument) {
+            Console::error("Nama controller harus ditentukan! Contoh: php susan make:controller UserController");
+            exit(1);
+        }
+
+        $rawName = str_replace('Controller', '', $argument);
+        $className = ucfirst($rawName) . 'Controller';
+        $viewFolder = strtolower($rawName);
+        $filePath = __DIR__ . "/app/controllers/{$className}.php";
+
+        if (file_exists($filePath)) {
+            Console::warn("Controller [{$className}] sudah ada di app/controllers/{$className}.php!");
+            exit(1);
+        }
+
+        $template = <<<PHP
+<?php
+// app/controllers/{$className}.php - Controller otomatis dihasilkan oleh Susan CLI
+
+class {$className} extends Controller {
+    public function index() {
+        \$data['judul'] = 'Daftar {$rawName}';
+        
+        // 1. SQL Query: Ambil semua data
+        \$this->db->query("SELECT * FROM {$viewFolder} ORDER BY id DESC");
+        \$data['items'] = \$this->db->resultSet();
+
+        \$this->view('templates/header', \$data);
+        \$this->view('{$viewFolder}/index', \$data);
+        \$this->view('templates/footer');
+    }
+
+    public function create() {
+        \$data['judul'] = 'Tambah {$rawName} Baru';
+        \$this->view('templates/header', \$data);
+        \$this->view('{$viewFolder}/create', \$data);
+        \$this->view('templates/footer');
+    }
+
+    public function store() {
+        if (\$_SERVER['REQUEST_METHOD'] === 'POST') {
+            if (!Csrf::validateToken()) {
+                Session::flash('danger', 'CSRF token mismatch');
+                return redirect('{$viewFolder}/create');
+            }
+
+            // Validasi request input ala Laravel
+            \$validated = \$this->validate([
+                'nama' => 'required|min:3'
+            ], \$_POST, '{$viewFolder}/create');
+
+            // Simpan data
+            // {$rawName}::create(\$validated);
+            
+            Session::flash('success', 'Data {$rawName} berhasil disimpan!');
+            return redirect('{$viewFolder}');
+        }
+    }
+
+    public function edit(\$id = null) {
+        if (!\$id) {
+            return redirect('{$viewFolder}');
+        }
+
+        \$data['judul'] = 'Edit {$rawName}';
+        \$data['item'] = {$rawName}::find(\$id);
+
+        \$this->view('templates/header', \$data);
+        \$this->view('{$viewFolder}/edit', \$data);
+        \$this->view('templates/footer');
+    }
+
+    public function update() {
+        if (\$_SERVER['REQUEST_METHOD'] === 'POST') {
+            if (!Csrf::validateToken()) {
+                Session::flash('danger', 'CSRF token mismatch');
+                return redirect('{$viewFolder}');
+            }
+
+            \$id = filter_var(\$_POST['id'] ?? null, FILTER_VALIDATE_INT);
+            if (\$id) {
+                \$validated = \$this->validate([
+                    'nama' => 'required|min:3'
+                ], \$_POST, '{$viewFolder}/edit/' . \$id);
+
+                {$rawName}::update(\$id, \$validated);
+                Session::flash('success', 'Data {$rawName} berhasil diperbarui!');
+            }
+            return redirect('{$viewFolder}');
+        }
+    }
+
+    public function delete(\$id = null) {
+        if (\$id) {
+            {$rawName}::delete(\$id);
+            Session::flash('success', 'Data {$rawName} berhasil dihapus!');
+        }
+        return redirect('{$viewFolder}');
+    }
+}
+PHP;
+
+        file_put_contents($filePath, $template);
+        Console::success("Controller berhasil dibuat: " . Console::color("app/controllers/{$className}.php", "33"));
+        break;
+
+    case 'make:model':
+        if (!$argument) {
+            Console::error("Nama model harus ditentukan! Contoh: php susan make:model Category");
+            exit(1);
+        }
+
+        $rawName = str_replace('_model', '', $argument);
+        $className = ucfirst($rawName);
+        $tableName = strtolower($className) . 's';
+        $filePath = __DIR__ . "/app/models/{$className}.php";
+
+        if (file_exists($filePath)) {
+            Console::warn("Model [{$className}] sudah ada di app/models/{$className}.php!");
+            exit(1);
+        }
+
+        $template = <<<PHP
+<?php
+// app/models/{$className}.php - Model Active Record ala Eloquent
+
+class {$className} extends Model {
+    protected static \$table = '{$tableName}';
+    protected static \$primaryKey = 'id';
+}
+PHP;
+
+        file_put_contents($filePath, $template);
+        Console::success("Model berhasil dibuat: " . Console::color("app/models/{$className}.php", "33"));
+
+        // Opsi flag -m untuk sekaligus membuat migrasi
+        if (in_array('-m', $argv) || in_array('--migration', $argv)) {
+            $runner = new MigrationRunner();
+            $runner->createMigration("create_{$tableName}_table");
+        }
+        break;
+
+    case 'make:middleware':
+        if (!$argument) {
+            Console::error("Nama middleware harus ditentukan! Contoh: php susan make:middleware CheckRole");
+            exit(1);
+        }
+
+        $rawName = str_replace(['_middleware', 'Middleware'], '', $argument);
+        $className = ucfirst($rawName) . 'Middleware';
+        $filePath = __DIR__ . "/app/middlewares/{$className}.php";
+
+        if (!is_dir(__DIR__ . '/app/middlewares')) {
+            mkdir(__DIR__ . '/app/middlewares', 0777, true);
+        }
+
+        if (file_exists($filePath)) {
+            Console::warn("Middleware [{$className}] sudah ada di app/middlewares/{$className}.php!");
+            exit(1);
+        }
+
+        $template = <<<PHP
+<?php
+// app/middlewares/{$className}.php - Middleware Penjaga Request
+
+require_once __DIR__ . '/../core/Middleware.php';
+
+class {$className} implements MiddlewareInterface {
+    /**
+     * Handle incoming request
+     *
+     * @param Closure \$next
+     * @return mixed
+     */
+    public function handle(Closure \$next) {
+        // Tulis logika pengecekan di sini (contoh: cek sesi, role, token, dll)
+        // if (syarat_gagal) {
+        //     Session::flash('danger', 'Akses ditolak!');
+        //     return redirect('home');
+        // }
+
+        return \$next();
+    }
+}
+PHP;
+
+        file_put_contents($filePath, $template);
+        Console::success("Middleware berhasil dibuat: " . Console::color("app/middlewares/{$className}.php", "33"));
+        break;
+
+    case 'make:migration':
+        if (!$argument) {
+            Console::error("Nama migrasi harus ditentukan! Contoh: php susan make:migration create_orders_table");
+            exit(1);
+        }
+        $runner = new MigrationRunner();
+        $runner->createMigration($argument);
+        break;
+
+    case 'route:list':
+        Console::title("Daftar Routes Terdaftar (routes/web.php)");
+        $routes = Route::getRoutes();
+
+        printf("+-%'-8s-+-%'-30s-+-%'-35s-+-%'-20s-+\n", "", "", "", "");
+        printf("| %-8s | %-30s | %-35s | %-20s |\n", "Method", "URI", "Action", "Middleware");
+        printf("+-%'-8s-+-%'-30s-+-%'-35s-+-%'-20s-+\n", "", "", "", "");
+
+        foreach ($routes as $r) {
+            $methodColor = $r['method'] === 'GET' ? "32" : ($r['method'] === 'POST' ? "33" : "35");
+            $methodFormatted = Console::color(sprintf("%-8s", $r['method']), $methodColor);
+
+            $action = $r['action'];
+            if (is_array($action)) {
+                $actionStr = $action[0] . '@' . ($action[1] ?? 'index');
+            } elseif (is_callable($action)) {
+                $actionStr = 'Closure';
+            } else {
+                $actionStr = (string)$action;
+            }
+
+            $mwStr = !empty($r['middlewares']) ? implode(', ', $r['middlewares']) : '-';
+
+            printf("| %s | %-30s | %-35s | %-20s |\n", $methodFormatted, $r['uri'], $actionStr, $mwStr);
+        }
+        printf("+-%'-8s-+-%'-30s-+-%'-35s-+-%'-20s-+\n\n", "", "", "", "");
+        break;
+
+    case 'storage:link':
+        Console::title("Membuat Symbolic Link Storage (storage:link)");
+        
+        $target = __DIR__ . '/storage/app/public';
+        $link = __DIR__ . '/public/storage';
+
+        if (!is_dir($target)) {
+            mkdir($target, 0777, true);
+        }
+
+        if (is_link($link)) {
+            unlink($link);
+        }
+
+        if (!file_exists($link)) {
+            if (@symlink($target, $link)) {
+                Console::success("The [" . Console::color("public/storage", "33") . "] link has been connected to [" . Console::color("storage/app/public", "36") . "].");
+            } else {
+                if (!is_dir($link)) {
+                    mkdir($link, 0777, true);
+                }
+                Console::info("Folder [" . Console::color("public/storage", "33") . "] siap digunakan.");
+            }
+        } else {
+            Console::info("The [" . Console::color("public/storage", "33") . "] link is already present.");
+        }
+        break;
+
+    case 'list':
+    case '--help':
+    case '-h':
+    default:
+        echo "\n\033[35m  ____                                \033[0m\n";
+        echo "\033[35m / ___| _   _ ___  __ _ _ __          \033[0m\n";
+        echo "\033[35m \___ \| | | / __|/ _` | '_ \         \033[0m\n";
+        echo "\033[35m  ___) | |_| \__ \ (_| | | | |        \033[0m\n";
+        echo "\033[35m |____/ \__,_|___/\__,_|_| |_|        \033[0m  \033[37mCLI Command Runner v1.0\033[0m\n\n";
+
+        echo "\033[33mPenggunaan:\033[0m\n";
+        echo "  php susan <command> [arguments] [options]\n\n";
+
+        echo "\033[33mServer & Lingkungan:\033[0m\n";
+        echo "  \033[32mserve\033[0m [port]                   Jalankan built-in development server (default port: 8000)\n";
+        echo "  \033[32mdev\033[0m                            Jalankan Vite frontend dev server (live reload dari app.css)\n";
+        echo "  \033[32mbuild\033[0m                          Kompilasi asset Vite untuk mode production (ke public/build/)\n\n";
+
+        echo "\033[33mDatabase & Migrasi:\033[0m\n";
+        echo "  \033[32mmigrate\033[0m                        Jalankan semua file migrasi database yang baru\n";
+        echo "  \033[32mmigrate:rollback\033[0m               Batalkan (rollback) batch migrasi terakhir\n";
+        echo "  \033[32mmigrate:status\033[0m                 Tampilkan tabel status seluruh migrasi\n";
+        echo "  \033[32mdb:seed\033[0m                        Jalankan seeder untuk mengisi data dummy database\n\n";
+
+        echo "\033[33mStorage & Filesystem:\033[0m\n";
+        echo "  \033[32mstorage:link\033[0m                   Buat symbolic link public/storage -> storage/app/public\n\n";
+
+        echo "\033[33mGenerator (Make Commands):\033[0m\n";
+        echo "  \033[32mmake:controller\033[0m <Nama>         Buat Controller baru lengkap dengan method CRUD\n";
+        echo "  \033[32mmake:model\033[0m <Nama> [-m]         Buat Model Active Record (tambahkan -m untuk migrasi)\n";
+        echo "  \033[32mmake:migration\033[0m <Nama>         Buat file template migrasi baru di database/migrations/\n";
+        echo "  \033[32mmake:middleware\033[0m <Nama>        Buat file class middleware baru di app/middlewares/\n\n";
+
+        echo "\033[33mInformasi:\033[0m\n";
+        echo "  \033[32mroute:list\033[0m                     Tampilkan daftar semua route yang terdaftar di routes/web.php\n\n";
+        break;
+}

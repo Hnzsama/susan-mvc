@@ -1,0 +1,46 @@
+<div class="hero-banner">
+    <span class="concept-pill mb-2"><i class="bi bi-database"></i> Bab 5: Fondasi Data</span>
+    <h1 class="fw-bold mb-2">Migrasi Database & Seeder 🗄️</h1>
+    <p class="lead mb-0 text-slate-300">Ubah struktur tabel layaknya Version Control (Git) tanpa perlu repot buka phpMyAdmin manual.</p>
+</div>
+
+<div class="baby-card">
+    <h4 class="fw-bold mb-3">Apa itu Migrasi?</h4>
+    <p>Migrasi adalah cetak biru (blueprint) tabel database kamu dalam kode PHP. Jika teman setim kamu clone project, mereka cukup jalankan <code>php susan migrate</code> dan database langsung siap 100%!</p>
+
+    <h5 class="fw-bold mt-4 mb-2">1. Membuat File Migrasi Baru</h5>
+    <div class="code-container">
+        <div class="code-header">
+            <span class="lang-badge">Bash Terminal</span>
+            <button class="btn-copy" onclick="copyCode(this)"><i class="bi bi-clipboard"></i> Salin</button>
+        </div>
+        <pre><code class="language-bash">php susan make:migration add_gambar_to_produk_table</code></pre>
+    </div>
+
+    <h5 class="fw-bold mt-4 mb-2">2. Menulis Isi File Migrasi (Method up() dan down())</h5>
+    <div class="code-container">
+        <div class="code-header">
+            <span class="lang-badge">PHP database/migrations/m0007_add_gambar_to_produk_table.php</span>
+            <button class="btn-copy" onclick="copyCode(this)"><i class="bi bi-clipboard"></i> Salin</button>
+        </div>
+        <pre><code class="language-php">&lt;?php
+class m0007_add_gambar_to_produk_table {
+    public function up(Database $db) {
+        $db->query("ALTER TABLE produk ADD COLUMN gambar TEXT NULL");
+        $db->execute();
+    }
+
+    public function down(Database $db) {
+        // Rollback query
+    }
+}</code></pre>
+    </div>
+
+    <h5 class="fw-bold mt-4 mb-2">3. Mengisi Data Dummy dengan Seeder</h5>
+    <div class="code-container">
+        <div class="code-header">
+            <span class="lang-badge">Bash Terminal</span>
+        </div>
+        <pre><code class="language-bash">php susan db:seed</code></pre>
+    </div>
+</div>

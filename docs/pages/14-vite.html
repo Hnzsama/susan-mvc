@@ -1,0 +1,20 @@
+<div class="hero-banner">
+    <span class="concept-pill mb-2"><i class="bi bi-lightning-charge"></i> Bab 14: Kecepatan Kilat</span>
+    <h1 class="fw-bold mb-2">Integrasi Vite & Hot Reload ⚡</h1>
+    <p class="lead mb-0 text-slate-300">Edit CSS atau JS tanpa perlu refresh halaman browser manual secara berulang kali.</p>
+</div>
+
+<div class="baby-card">
+    <h4 class="fw-bold mb-3">Bagaimana Vite Bekerja di Susan MVC?</h4>
+    <p>Fungsi pembantu <code>vite('resources/css/app.css')</code> secara otomatis menghubungkan script HMR dev saat server Vite aktif, atau membaca bundle <code>public/build/</code> saat mode production.</p>
+
+    <div class="code-container">
+        <div class="code-header">
+            <span class="lang-badge">PHP Helper vite() di Header</span>
+        </div>
+        <pre><code class="language-php">&lt;head&gt;
+    &lt;title&gt;&lt;?= $judul ?? APP_NAME ?&gt;&lt;/title&gt;
+    &lt;?= vite('resources/css/app.css') ?&gt;
+&lt;/head&gt;</code></pre>
+    </div>
+</div>

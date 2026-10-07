@@ -1,0 +1,57 @@
+<div class="hero-banner">
+    <span class="concept-pill mb-2"><i class="bi bi-folder-symlink"></i> Bab 7: Berkas & Media</span>
+    <h1 class="fw-bold mb-2">Filesystem & Storage Engine 📦</h1>
+    <p class="lead mb-0 text-slate-300">Upload file, simpan gambar, hapus berkas otomatis, dan dapatkan URL publik ala Laravel Storage.</p>
+</div>
+
+<div class="baby-card">
+    <div class="d-flex align-items-center gap-3 mb-3">
+        <div class="step-bubble">📁</div>
+        <div>
+            <h4 class="fw-bold mb-0">Bagaimana Cara Kerja Storage di Susan MVC?</h4>
+            <small class="text-muted">Aman, Terstruktur, dan Terlindungi dari Akses Liar!</small>
+        </div>
+    </div>
+
+    <p>Semua berkas yang diunggah disimpan di folder terlindung <code>storage/app/public/</code>. Agar browser dapat membukanya, buatlah <strong>Symbolic Link</strong> ke <code>public/storage</code>:</p>
+
+    <div class="cmd-code mb-3">
+        <span>php susan storage:link</span>
+        <button class="btn-copy" onclick="copyText('php susan storage:link')"><i class="bi bi-clipboard"></i></button>
+    </div>
+
+    <h5 class="fw-bold mt-4 mb-2">Kamus Method Storage Helper:</h5>
+    <div class="table-responsive mb-4">
+        <table class="table table-custom mb-0">
+            <thead>
+                <tr>
+                    <th>Method</th>
+                    <th>Contoh Pemanggilan</th>
+                    <th>Kegunaan</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>Storage::putFile()</code></td>
+                    <td><code>Storage::putFile('products', $_FILES['gambar'])</code></td>
+                    <td>Upload file dari form <code>$_FILES</code>, buat nama unik otomatis, dan simpan di folder tujuan.</td>
+                </tr>
+                <tr>
+                    <td><code>Storage::url()</code></td>
+                    <td><code>Storage::url($path)</code></td>
+                    <td>Menghasilkan URL publik untuk tag <code>&lt;img src="..."&gt;</code>.</td>
+                </tr>
+                <tr>
+                    <td><code>Storage::delete()</code></td>
+                    <td><code>Storage::delete($path)</code></td>
+                    <td>Menghapus file dari disk fisik storage secara permanen dan aman.</td>
+                </tr>
+                <tr>
+                    <td><code>Storage::exists()</code></td>
+                    <td><code>Storage::exists('products/foto.jpg')</code></td>
+                    <td>Mengecek apakah file benar-benar ada di storage.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,42 @@
+<div class="hero-banner">
+    <span class="concept-pill mb-2"><i class="bi bi-box-seam"></i> Bab 12: Ekosistem Library</span>
+    <h1 class="fw-bold mb-2">Integrasi Package Composer 📦</h1>
+    <p class="lead mb-0 text-slate-300">Gunakan ribuan library PHP open-source favoritmu langsung tanpa konfigurasi rumit.</p>
+</div>
+
+<div class="baby-card">
+    <div class="d-flex align-items-center gap-3 mb-3">
+        <div class="step-bubble">📦</div>
+        <div>
+            <h4 class="fw-bold mb-0">Bagaimana Composer Bekerja di Susan MVC?</h4>
+            <small class="text-muted">Autoload Otomatis via vendor/autoload.php</small>
+        </div>
+    </div>
+
+    <p>Susan MVC secara otomatis mendeteksi dan memuat <code>vendor/autoload.php</code> di file <code>app/init.php</code> jika folder <code>vendor/</code> tersedia.</p>
+
+    <h5 class="fw-bold mt-4 mb-2">1. Install Package dari Terminal</h5>
+    <div class="cmd-code mb-3">
+        <span>composer require nesbot/carbon</span>
+        <button class="btn-copy" onclick="copyText('composer require nesbot/carbon')"><i class="bi bi-clipboard"></i></button>
+    </div>
+
+    <h5 class="fw-bold mt-4 mb-2">2. Gunakan di Controller / Rute / View</h5>
+    <div class="code-container">
+        <div class="code-header">
+            <span class="lang-badge">PHP Contoh Penggunaan Carbon</span>
+            <button class="btn-copy" onclick="copyCode(this)"><i class="bi bi-clipboard"></i> Salin</button>
+        </div>
+        <pre><code class="language-php">use Carbon\Carbon;
+
+Route::get('/demo-composer', function() {
+    Carbon::setLocale('id'); // Bahasa Indonesia
+
+    $sekarang = Carbon::now();
+    $waktuLalu = Carbon::now()->subMinutes(25);
+
+    echo "Sekarang: " . $sekarang->translatedFormat('l, d F Y');
+    echo "Relatif: " . $waktuLalu->diffForHumans(); // "25 menit yang lalu"
+});</code></pre>
+    </div>
+</div>

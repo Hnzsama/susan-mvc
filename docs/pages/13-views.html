@@ -1,0 +1,30 @@
+<div class="hero-banner">
+    <span class="concept-pill mb-2"><i class="bi bi-layout-text-window"></i> Bab 13: Tampilan Visual</span>
+    <h1 class="fw-bold mb-2">Views, Layouts & Template 🎨</h1>
+    <p class="lead mb-0 text-slate-300">Desain antarmuka yang elegan, modular, dan terstruktur tanpa pengulangan kode (DRY).</p>
+</div>
+
+<div class="baby-card">
+    <h4 class="fw-bold mb-3">1. Sistem Template Modular (Header - Konten - Footer)</h4>
+    <div class="code-container">
+        <div class="code-header">
+            <span class="lang-badge">PHP Controller</span>
+        </div>
+        <pre><code class="language-php">$this->view('templates/header', $data);
+$this->view('product/index', $data);
+$this->view('templates/footer');</code></pre>
+    </div>
+
+    <h4 class="fw-bold mt-4 mb-3">2. Flash Alert Message di Header</h4>
+    <div class="code-container">
+        <div class="code-header">
+            <span class="lang-badge">PHP Header Template</span>
+        </div>
+        <pre><code class="language-php">&lt;?php if (Session::hasFlash('success')): ?&gt;
+    &lt;div class="alert alert-success alert-dismissible fade show"&gt;
+        &lt;?= Session::getFlash('success') ?&gt;
+        &lt;button type="button" class="btn-close" data-bs-dismiss="alert"&gt;&lt;/button&gt;
+    &lt;/div&gt;
+&lt;?php endif; ?&gt;</code></pre>
+    </div>
+</div>

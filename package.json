@@ -1,0 +1,17 @@
+{
+  "name": "inainu-mvc",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "php susan dev",
+    "build": "vite build"
+  },
+  "devDependencies": {
+    "vite": "^6.0.0"
+  },
+  "dependencies": {
+    "@popperjs/core": "^2.11.8",
+    "bootstrap": "^5.3.3",
+    "bootstrap-icons": "^1.11.3"
+  }
+}

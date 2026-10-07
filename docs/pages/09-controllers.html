@@ -1,0 +1,35 @@
+<div class="hero-banner">
+    <span class="concept-pill mb-2"><i class="bi bi-cpu"></i> Bab 9: Otak Aplikasi</span>
+    <h1 class="fw-bold mb-2">Controller & Request Handling 🧠</h1>
+    <p class="lead mb-0 text-slate-300">Pusat komando yang mengatur alur logika bisnis, menerima input, dan memanggil view.</p>
+</div>
+
+<div class="baby-card">
+    <h4 class="fw-bold mb-3">Struktur Standar Controller</h4>
+    <p>Setiap controller mewarisi class <code>Controller</code> utama, sehingga langsung memiliki akses ke helper <code>$this->view()</code> dan <code>$this->validate()</code>.</p>
+
+    <div class="code-container">
+        <div class="code-header">
+            <span class="lang-badge">PHP app/controllers/ProductController.php</span>
+            <button class="btn-copy" onclick="copyCode(this)"><i class="bi bi-clipboard"></i> Salin</button>
+        </div>
+        <pre><code class="language-php">&lt;?php
+class ProductController extends Controller {
+    public function index() {
+        $data['judul'] = 'Daftar Produk';
+        $data['produk'] = Product::all();
+
+        $this->view('templates/header', $data);
+        $this->view('product/index', $data);
+        $this->view('templates/footer');
+    }
+
+    public function create() {
+        $data['judul'] = 'Tambah Produk';
+        $this->view('templates/header', $data);
+        $this->view('product/create', $data);
+        $this->view('templates/footer');
+    }
+}</code></pre>
+    </div>
+</div>

@@ -1,0 +1,51 @@
+<div class="hero-banner">
+    <span class="concept-pill mb-2"><i class="bi bi-arrow-clockwise"></i> Bab 2: Di Balik Layar</span>
+    <h1 class="fw-bold mb-2">Bagaimana Sebuah Halaman Muncul? 🔄</h1>
+    <p class="lead mb-0 text-slate-300">Langkah demi langkah apa yang terjadi dari saat kamu menekan Enter di browser sampai halaman muncul.</p>
+</div>
+
+<div class="baby-card">
+    <h4 class="fw-bold mb-3">Peta Perjalanan Request (Request Lifecycle)</h4>
+    
+    <div class="d-flex flex-column gap-3">
+        <div class="d-flex gap-3 p-3 border rounded-3 bg-light">
+            <div class="step-bubble">1</div>
+            <div>
+                <h6 class="fw-bold mb-1">User Mengetik URL di Browser</h6>
+                <p class="small text-muted mb-0">Contoh: <code>http://127.0.0.1:8000/product</code>. Request dikirim ke server dan diterima pertama kali oleh file <code>public/index.php</code> (Pintu Gerbang Utama).</p>
+            </div>
+        </div>
+
+        <div class="d-flex gap-3 p-3 border rounded-3 bg-light">
+            <div class="step-bubble">2</div>
+            <div>
+                <h6 class="fw-bold mb-1">Bootstrap & Inisialisasi (app/init.php)</h6>
+                <p class="small text-muted mb-0">Susan membaca <code>.env</code>, memulai sesi PHP (<code>Session::start()</code>), memuat autoloader Composer (<code>vendor/autoload.php</code>), koneksi PDO database, dan daftar rute di <code>routes/web.php</code>.</p>
+            </div>
+        </div>
+
+        <div class="d-flex gap-3 p-3 border rounded-3 bg-light">
+            <div class="step-bubble">3</div>
+            <div>
+                <h6 class="fw-bold mb-1">Pencocokan Rute & Pemeriksaan Middleware</h6>
+                <p class="small text-muted mb-0">Router memeriksa kecocokan URL. Jika ada middleware (satpam) terpasang, request dicek dulu (contoh: apakah sudah login?). Jika lolos, barulah diteruskan ke controller.</p>
+            </div>
+        </div>
+
+        <div class="d-flex gap-3 p-3 border rounded-3 bg-light">
+            <div class="step-bubble">4</div>
+            <div>
+                <h6 class="fw-bold mb-1">Controller Bertindak & Berbicara ke Model</h6>
+                <p class="small text-muted mb-0"><code>ProductController</code> meminta data produk ke <code>Product::all()</code>. Model mengambil baris data dari tabel database SQLite/MySQL.</p>
+            </div>
+        </div>
+
+        <div class="d-flex gap-3 p-3 border rounded-3 bg-light">
+            <div class="step-bubble">5</div>
+            <div>
+                <h6 class="fw-bold mb-1">Rendering View & Dikirim Kembali ke Browser</h6>
+                <p class="small text-muted mb-0">Controller merender <code>resources/views/product/index.php</code> dengan data produk, lalu mengirimkan HTML final ke layar pengguna. Selesai!</p>
+            </div>
+        </div>
+    </div>
+</div>

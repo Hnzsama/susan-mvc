@@ -1,0 +1,74 @@
+<div class="hero-banner">
+    <span class="concept-pill mb-2"><i class="bi bi-shield-check"></i> Bab 10: Satpam Form</span>
+    <h1 class="fw-bold mb-2">Validasi Request & Flash Messages 🛡️</h1>
+    <p class="lead mb-0 text-slate-300">Cegah data sampah masuk ke database dengan aturan validasi ala Laravel Request Validator.</p>
+</div>
+
+<div class="baby-card">
+    <h4 class="fw-bold mb-3">Aturan Validasi yang Didukung (Validation Rules)</h4>
+    
+    <div class="table-responsive mb-4">
+        <table class="table table-custom mb-0">
+            <thead>
+                <tr>
+                    <th>Rule</th>
+                    <th>Contoh Aturan</th>
+                    <th>Arti / Makna</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>required</code></td>
+                    <td><code>'nama' => 'required'</code></td>
+                    <td>Wajib diisi, tidak boleh kosong.</td>
+                </tr>
+                <tr>
+                    <td><code>min:X</code></td>
+                    <td><code>'nama' => 'min:3'</code></td>
+                    <td>Panjang string minimal X karakter atau angka minimal bernilai X.</td>
+                </tr>
+                <tr>
+                    <td><code>max:X</code></td>
+                    <td><code>'nama' => 'max:100'</code></td>
+                    <td>Panjang maksimal X karakter.</td>
+                </tr>
+                <tr>
+                    <td><code>numeric</code></td>
+                    <td><code>'harga' => 'numeric'</code></td>
+                    <td>Harus berupa angka (desimal/bulat).</td>
+                </tr>
+                <tr>
+                    <td><code>integer</code></td>
+                    <td><code>'stok' => 'integer'</code></td>
+                    <td>Harus berupa bilangan bulat.</td>
+                </tr>
+                <tr>
+                    <td><code>email</code></td>
+                    <td><code>'email' => 'email'</code></td>
+                    <td>Harus berupa format email yang valid.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h5 class="fw-bold mt-4 mb-2">Contoh Penggunaan di Controller</h5>
+    <div class="code-container">
+        <div class="code-header">
+            <span class="lang-badge">PHP Validasi di Controller</span>
+            <button class="btn-copy" onclick="copyCode(this)"><i class="bi bi-clipboard"></i> Salin</button>
+        </div>
+        <pre><code class="language-php">public function store() {
+    // Validasi input: Jika gagal, otomatis flash error dan redirect kembali!
+    $validated = $this->validate([
+        'nama'     => 'required|min:3|max:150',
+        'kategori' => 'required|string',
+        'harga'    => 'required|numeric|min:1000',
+        'stok'     => 'required|integer|min:0'
+    ], $_POST, 'product/create');
+
+    Product::create($validated);
+    Session::flash('success', 'Produk berhasil ditambahkan!');
+    return redirect('product');
+}</code></pre>
+    </div>
+</div>

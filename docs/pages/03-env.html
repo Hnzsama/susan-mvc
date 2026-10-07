@@ -1,0 +1,54 @@
+<div class="hero-banner">
+    <span class="concept-pill mb-2"><i class="bi bi-sliders"></i> Bab 3: Pengaturan</span>
+    <h1 class="fw-bold mb-2">Setup Lingkungan & File .env ⚙️</h1>
+    <p class="lead mb-0 text-slate-300">Tempat rahasia menyimpan password, database, dan konfigurasi tanpa takut bocor ke GitHub.</p>
+</div>
+
+<div class="baby-card">
+    <h4 class="fw-bold mb-3">Apa itu File <code>.env</code>?</h4>
+    <p>File <code>.env</code> adalah buku catatan rahasia aplikasi kamu. Di sinilah kamu menentukan apakah aplikasi berjalan di laptop sendiri (lokal) atau server online (production), serta menghubungkan database SQLite atau MySQL.</p>
+
+    <div class="code-container">
+        <div class="code-header">
+            <span class="lang-badge">.env (Konfigurasi Aplikasi)</span>
+            <button class="btn-copy" onclick="copyCode(this)"><i class="bi bi-clipboard"></i> Salin</button>
+        </div>
+        <pre><code class="language-bash"># Nama & Lingkungan Aplikasi
+APP_NAME="Inainu MVC Studio"
+APP_ENV=development
+APP_URL=http://127.0.0.1:8000/
+
+# Pengaturan Database Default (SQLite - Langsung jalan tanpa install server DB!)
+DB_DRIVER=sqlite
+DB_FILE=../database.sqlite
+
+# Atau jika ingin memakai MySQL (Aktifkan baris ini):
+# DB_DRIVER=mysql
+# DB_HOST=127.0.0.1
+# DB_PORT=3306
+# DB_NAME=inainu_db
+# DB_USER=root
+# DB_PASS=
+
+# Pengaturan Filesystem Storage
+FILESYSTEM_DISK=public</code></pre>
+    </div>
+
+    <div class="analogy-box">
+        <i class="bi bi-info-circle-fill me-2"></i>
+        <strong>Cara Mengambil Nilai .env di Kode PHP:</strong>
+        <br>Gunakan fungsi global <code>env('NAMA_KEY', 'nilai_default_jika_kosong')</code>.
+    </div>
+
+    <div class="code-container">
+        <div class="code-header">
+            <span class="lang-badge">PHP Contoh Penggunaan env()</span>
+            <button class="btn-copy" onclick="copyCode(this)"><i class="bi bi-clipboard"></i> Salin</button>
+        </div>
+        <pre><code class="language-php">// Mengambil nama aplikasi dari .env
+$appName = env('APP_NAME', 'Susan MVC');
+
+// Mengambil konfigurasi disk storage
+$disk = env('FILESYSTEM_DISK', 'public');</code></pre>
+    </div>
+</div>

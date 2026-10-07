@@ -1,0 +1,77 @@
+<div class="hero-banner">
+    <span class="concept-pill mb-2"><i class="bi bi-boxes"></i> Bab 6: Manipulasi Data</span>
+    <h1 class="fw-bold mb-2">Active Record ORM & Relasi Antar Tabel 🪄</h1>
+    <p class="lead mb-0 text-slate-300">Ambil, simpan, ubah, dan hubungkan tabel relasi (1:1, 1:N, N:M) tanpa menulis query JOIN yang rumit.</p>
+</div>
+
+<div class="baby-card">
+    <h4 class="fw-bold mb-3">1. Operasi Dasar CRUD pada Model</h4>
+    <div class="table-responsive mb-4">
+        <table class="table table-custom mb-0">
+            <thead>
+                <tr>
+                    <th>Operasi</th>
+                    <th>Contoh Kode Susan ORM</th>
+                    <th>Penjelasan</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Ambil Semua Data</strong></td>
+                    <td><code>$produk = Product::all();</code></td>
+                    <td>Mengambil seluruh baris dalam tabel <code>produk</code>.</td>
+                </tr>
+                <tr>
+                    <td><strong>Cari Berdasarkan ID</strong></td>
+                    <td><code>$item = Product::find($id);</code></td>
+                    <td>Mengambil 1 baris berdasarkan Primary Key <code>id</code>.</td>
+                </tr>
+                <tr>
+                    <td><strong>Filter (WHERE)</strong></td>
+                    <td><code>$murah = Product::where('harga', '<', 50000);</code></td>
+                    <td>Filter baris dengan kondisi tertentu.</td>
+                </tr>
+                <tr>
+                    <td><strong>Tambah Data Baru</strong></td>
+                    <td><code>$newId = Product::create([...]);</code></td>
+                    <td>Menyimpan baris baru dan mengembalikan ID auto-increment.</td>
+                </tr>
+                <tr>
+                    <td><strong>Update Data</strong></td>
+                    <td><code>Product::update($id, [...]);</code></td>
+                    <td>Mengubah data baris dengan ID tertentu.</td>
+                </tr>
+                <tr>
+                    <td><strong>Hapus Data</strong></td>
+                    <td><code>Product::delete($id);</code></td>
+                    <td>Menghapus data baris dengan ID tertentu.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h4 class="fw-bold mt-4 mb-3">2. Tiga Jenis Relasi Antar Tabel (ORM Relations)</h4>
+    <div class="row g-3">
+        <div class="col-md-4">
+            <div class="p-3 border rounded-3 bg-light h-100">
+                <span class="badge bg-primary mb-2">One-to-One (1:1)</span>
+                <p class="small text-muted mb-2">Satu produk punya satu spesifikasi detail.</p>
+                <code>$detail = Product::detail($id);</code>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="p-3 border rounded-3 bg-light h-100">
+                <span class="badge bg-warning text-dark mb-2">One-to-Many (1:N)</span>
+                <p class="small text-muted mb-2">Satu produk punya banyak ulasan dari user.</p>
+                <code>$reviews = Product::reviews($id);</code>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="p-3 border rounded-3 bg-light h-100">
+                <span class="badge bg-success mb-2">Many-to-Many (N:M)</span>
+                <p class="small text-muted mb-2">Produk punya banyak tag via tabel pivot.</p>
+                <code>$tags = Product::tags($id);</code>
+            </div>
+        </div>
+    </div>
+</div>

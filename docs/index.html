@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panduan Lengkap Susan PHP MVC (Modular Bahasa Bayi) 🍼</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Bootstrap 5.3 & Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    
+    <!-- Highlight.js for Syntax Highlighting -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/php.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/sql.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/bash.min.js"></script>
+
+    <style>
+        :root {
+            --brand-primary: #3b82f6;
+            --sidebar-width: 320px;
+            --header-height: 68px;
+            --bg-body: #f8fafc;
+            --bg-sidebar: #0f172a;
+            --text-sidebar: #94a3b8;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-body);
+            color: #334155;
+            line-height: 1.7;
+            margin: 0;
+            padding: 0;
+        }
+
+        code, pre { font-family: 'Fira Code', monospace; }
+
+        /* Top Header */
+        .doc-header {
+            height: var(--header-height);
+            background: rgba(15, 23, 42, 0.96);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 1040;
+        }
+
+        /* Sidebar Navigation */
+        .doc-sidebar {
+            width: var(--sidebar-width);
+            background: var(--bg-sidebar);
+            position: fixed;
+            top: var(--header-height);
+            bottom: 0; left: 0;
+            overflow-y: auto;
+            border-right: 1px solid rgba(255, 255, 255, 0.08);
+            z-index: 1030;
+            transition: transform 0.3s ease;
+        }
+
+        .doc-sidebar::-webkit-scrollbar { width: 6px; }
+        .doc-sidebar::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 4px;
+        }
+
+        .nav-group-title {
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #64748b;
+            font-weight: 800;
+            padding: 1.25rem 1.25rem 0.4rem;
+        }
+
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.55rem 1.25rem;
+            color: var(--text-sidebar);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+            cursor: pointer;
+        }
+
+        .sidebar-link:hover {
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.05);
+            border-left-color: rgba(59, 130, 246, 0.5);
+        }
+
+        .sidebar-link.active {
+            color: #ffffff;
+            background: linear-gradient(90deg, rgba(59, 130, 246, 0.15) 0%, transparent 100%);
+            border-left-color: var(--brand-primary);
+            font-weight: 700;
+        }
+
+        .sidebar-link .badge-num {
+            font-size: 0.7rem;
+            padding: 0.15rem 0.45rem;
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #cbd5e1;
+            margin-left: auto;
+        }
+
+        /* Main Content */
+        .doc-content {
+            margin-left: var(--sidebar-width);
+            margin-top: var(--header-height);
+            padding: 2.5rem 3rem 6rem;
+            min-height: calc(100vh - var(--header-height));
+            max-width: 1200px;
+        }
+
+        @media (max-width: 992px) {
+            .doc-sidebar { transform: translateX(-100%); }
+            .doc-sidebar.show { transform: translateX(0); }
+            .doc-content { margin-left: 0; padding: 1.5rem 1rem 4rem; }
+        }
+
+        .hero-banner {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 1.25rem;
+            padding: 2.25rem;
+            color: #ffffff;
+            margin-bottom: 2.5rem;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        .baby-card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 1rem;
+            padding: 1.75rem;
+            margin-bottom: 1.75rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        .analogy-box {
+            background: #fffbeb;
+            border-left: 4px solid #f59e0b;
+            border-radius: 0.75rem;
+            padding: 1.25rem;
+            margin: 1.25rem 0;
+            color: #92400e;
+        }
+
+        .concept-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.25rem 0.75rem;
+            background: #eff6ff;
+            color: #2563eb;
+            border-radius: 999px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .step-bubble {
+            width: 34px; height: 34px;
+            background: var(--brand-primary);
+            color: white;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 800; font-size: 0.95rem;
+            flex-shrink: 0;
+        }
+
+        .code-container {
+            position: relative;
+            margin: 1.25rem 0;
+            border-radius: 0.75rem;
+            overflow: hidden;
+            border: 1px solid #334155;
+            background: #282c34;
+        }
+
+        .code-header {
+            background: #1e222a;
+            padding: 0.5rem 1rem;
+            display: flex; align-items: center; justify-content: space-between;
+            color: #94a3b8; font-size: 0.75rem;
+        }
+
+        .code-header .lang-badge { font-weight: 700; text-transform: uppercase; color: #38bdf8; }
+
+        .btn-copy {
+            background: rgba(255, 255, 255, 0.1);
+            color: #f1f5f9; border: none;
+            padding: 0.2rem 0.6rem; border-radius: 0.35rem;
+            font-size: 0.75rem; cursor: pointer;
+        }
+
+        .btn-copy:hover { background: var(--brand-primary); color: #fff; }
+
+        .code-container pre { margin: 0; padding: 1.25rem; max-height: 480px; overflow: auto; }
+
+        .cmd-card {
+            background: #ffffff; border: 1px solid #e2e8f0;
+            border-radius: 0.75rem; padding: 1.25rem; height: 100%;
+        }
+
+        .cmd-code {
+            background: #0f172a; color: #38bdf8;
+            padding: 0.4rem 0.75rem; border-radius: 0.4rem;
+            font-size: 0.85rem; font-weight: 600;
+            display: flex; align-items: center; justify-content: space-between;
+            margin-bottom: 0.75rem;
+        }
+
+        .search-box input {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #ffffff; padding-left: 2.5rem;
+            border-radius: 0.6rem; font-size: 0.85rem;
+        }
+
+        .search-box input:focus {
+            background: rgba(255, 255, 255, 0.14);
+            border-color: var(--brand-primary);
+            color: #ffffff; box-shadow: none;
+        }
+
+        .search-box i {
+            position: absolute; left: 0.85rem; top: 50%;
+            transform: translateY(-50%); color: #64748b;
+        }
+
+        .table-custom { border-radius: 0.75rem; overflow: hidden; border: 1px solid #e2e8f0; }
+        .table-custom th { background: #f1f5f9; color: #334155; font-weight: 700; font-size: 0.85rem; padding: 0.85rem 1rem; }
+        .table-custom td { padding: 0.85rem 1rem; font-size: 0.85rem; vertical-align: middle; }
+
+        #toastNotice {
+            position: fixed; bottom: 2rem; right: 2rem;
+            z-index: 2000; display: none;
+        }
+
+        .loading-spinner {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            min-height: 300px; color: #64748b;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- TOP HEADER -->
+    <header class="doc-header d-flex align-items-center justify-content-between px-3 px-lg-4">
+        <div class="d-flex align-items-center gap-3">
+            <button class="btn btn-outline-secondary btn-sm text-light d-lg-none" id="btnToggleSidebar">
+                <i class="bi bi-list fs-5"></i>
+            </button>
+            <div class="d-flex align-items-center gap-2">
+                <span class="fs-4">🍼</span>
+                <div>
+                    <span class="fw-bold text-white fs-6">Susan MVC Docs</span>
+                    <span class="badge bg-primary-subtle text-primary border border-primary-subtle ms-2 rounded-pill small">Modular Edition</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex align-items-center gap-3">
+            <div class="search-box position-relative d-none d-md-block" style="width: 280px;">
+                <i class="bi bi-search"></i>
+                <input type="text" id="docSearch" class="form-control" placeholder="Cari topik...">
+            </div>
+            <a href="../" class="btn btn-sm btn-outline-light rounded-pill px-3">
+                <i class="bi bi-arrow-left me-1"></i> Kembali ke Aplikasi
+            </a>
+        </div>
+    </header>
+
+    <!-- SIDEBAR NAVIGATION -->
+    <aside class="doc-sidebar" id="sidebarMenu">
+        <div class="p-3 d-md-none">
+            <div class="search-box position-relative">
+                <i class="bi bi-search"></i>
+                <input type="text" id="docSearchMobile" class="form-control" placeholder="Cari topik...">
+            </div>
+        </div>
+
+        <div class="nav-group-title">🎯 PENGENALAN & SETUP</div>
+        <a class="sidebar-link active" data-page="01-intro.html" data-hash="01-intro">
+            <i class="bi bi-stars text-warning"></i> 1. Apa itu Susan MVC?
+            <span class="badge-num">01</span>
+        </a>
+        <a class="sidebar-link" data-page="02-lifecycle.html" data-hash="02-lifecycle">
+            <i class="bi bi-arrow-repeat text-info"></i> 2. Siklus Hidup Request
+            <span class="badge-num">02</span>
+        </a>
+        <a class="sidebar-link" data-page="03-env.html" data-hash="03-env">
+            <i class="bi bi-gear-fill text-secondary"></i> 3. Setup Lingkungan & .env
+            <span class="badge-num">03</span>
+        </a>
+
+        <div class="nav-group-title">⚡ CLI RUNNER (PHP SUSAN)</div>
+        <a class="sidebar-link" data-page="04-cli.html" data-hash="04-cli">
+            <i class="bi bi-terminal-fill text-success"></i> 4. Kamus Lengkap CLI
+            <span class="badge-num">04</span>
+        </a>
+
+        <div class="nav-group-title">🗄️ DATABASE & ORM</div>
+        <a class="sidebar-link" data-page="05-migrations.html" data-hash="05-migrations">
+            <i class="bi bi-database-fill-gear text-primary"></i> 5. Migrasi & Seeder DB
+            <span class="badge-num">05</span>
+        </a>
+        <a class="sidebar-link" data-page="06-orm.html" data-hash="06-orm">
+            <i class="bi bi-boxes text-danger"></i> 6. Active Record ORM & Relasi
+            <span class="badge-num">06</span>
+        </a>
+
+        <div class="nav-group-title">📦 FILESYSTEM & STORAGE</div>
+        <a class="sidebar-link" data-page="07-storage.html" data-hash="07-storage">
+            <i class="bi bi-folder-symlink-fill text-warning"></i> 7. Storage Engine & Upload
+            <span class="badge-num">07</span>
+        </a>
+
+        <div class="nav-group-title">🛣️ ROUTING & CONTROLLER</div>
+        <a class="sidebar-link" data-page="08-routing.html" data-hash="08-routing">
+            <i class="bi bi-signpost-split-fill text-info"></i> 8. Routing (routes/web.php)
+            <span class="badge-num">08</span>
+        </a>
+        <a class="sidebar-link" data-page="09-controllers.html" data-hash="09-controllers">
+            <i class="bi bi-cpu-fill text-primary"></i> 9. Controller & Request Input
+            <span class="badge-num">09</span>
+        </a>
+        <a class="sidebar-link" data-page="10-validation.html" data-hash="10-validation">
+            <i class="bi bi-shield-check text-success"></i> 10. Validasi Form & Error Flash
+            <span class="badge-num">10</span>
+        </a>
+        <a class="sidebar-link" data-page="11-middleware.html" data-hash="11-middleware">
+            <i class="bi bi-person-badge-fill text-danger"></i> 11. Middleware Satpam Rute
+            <span class="badge-num">11</span>
+        </a>
+        <a class="sidebar-link" data-page="12-composer.html" data-hash="12-composer">
+            <i class="bi bi-box-seam-fill text-warning"></i> 12. Package Composer
+            <span class="badge-num">12</span>
+        </a>
+
+        <div class="nav-group-title">🎨 VIEW & FRONTEND</div>
+        <a class="sidebar-link" data-page="13-views.html" data-hash="13-views">
+            <i class="bi bi-layout-text-window-reverse text-purple"></i> 13. Views, Layout & Blade
+            <span class="badge-num">13</span>
+        </a>
+        <a class="sidebar-link" data-page="14-vite.html" data-hash="14-vite">
+            <i class="bi bi-lightning-charge-fill text-warning"></i> 14. Integrasi Vite
+            <span class="badge-num">14</span>
+        </a>
+
+        <div class="nav-group-title">🛡️ KEAMANAN & HELPERS</div>
+        <a class="sidebar-link" data-page="15-security.html" data-hash="15-security">
+            <i class="bi bi-lock-fill text-danger"></i> 15. Keamanan (CSRF, SQLi, XSS)
+            <span class="badge-num">15</span>
+        </a>
+        <a class="sidebar-link" data-page="16-helpers.html" data-hash="16-helpers">
+            <i class="bi bi-magic text-info"></i> 16. Cheatsheet Global Helper
+            <span class="badge-num">16</span>
+        </a>
+
+        <div class="p-3 mt-4 text-center">
+            <small class="text-secondary d-block">Susan PHP MVC Framework v1.0</small>
+            <small class="text-muted" style="font-size: 0.7rem;">Modular Multi-File Docs</small>
+        </div>
+    </aside>
+
+    <!-- MAIN DYNAMIC CONTENT AREA -->
+    <main class="doc-content" id="docMainContent">
+        <div class="loading-spinner">
+            <div class="spinner-border text-primary mb-2" role="status"></div>
+            <span>Memuat bab dokumentasi...</span>
+        </div>
+    </main>
+
+    <!-- TOAST NOTIFICATION -->
+    <div id="toastNotice" class="alert alert-dark border-0 shadow-lg text-white py-2 px-3 rounded-pill align-items-center gap-2">
+        <i class="bi bi-check2-circle text-success fs-5"></i>
+        <span id="toastMsg" class="small fw-semibold">Tersalin ke clipboard!</span>
+    </div>
+
+    <!-- Bootstrap 5.3 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        const docMainContent = document.getElementById('docMainContent');
+        const sidebarLinks = document.querySelectorAll('.sidebar-link');
+        const sidebarMenu = document.getElementById('sidebarMenu');
+        const pageCache = {};
+
+        async function loadChapter(pageFile, updateHash = true) {
+            docMainContent.innerHTML = `
+                <div class="loading-spinner">
+                    <div class="spinner-border text-primary mb-2" role="status"></div>
+                    <span>Memuat materi...</span>
+                </div>`;
+
+            try {
+                if (!pageCache[pageFile]) {
+                    // Coba fetch dari path lokal atau via routing /docs/pages/
+                    const url = window.location.pathname.includes('/docs') ? ('/docs/pages/' + pageFile) : ('pages/' + pageFile);
+                    const res = await fetch(url);
+                    if (!res.ok) throw new Error('Gagal memuat halaman: ' + res.status);
+                    pageCache[pageFile] = await res.text();
+                }
+
+                docMainContent.innerHTML = pageCache[pageFile];
+
+                // Re-highlight semua tag code baru
+                document.querySelectorAll('pre code').forEach((el) => {
+                    hljs.highlightElement(el);
+                });
+
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            } catch (err) {
+                docMainContent.innerHTML = `
+                    <div class="alert alert-danger rounded-4 p-4">
+                        <h4><i class="bi bi-exclamation-triangle-fill me-2"></i> Gagal Memuat Halaman</h4>
+                        <p class="mb-0">Tidak dapat mengambil file <code>${pageFile}</code> (${err.message}).</p>
+                    </div>`;
+            }
+
+            // Update active state sidebar
+            sidebarLinks.forEach(link => {
+                if (link.getAttribute('data-page') === pageFile) {
+                    link.classList.add('active');
+                    if (updateHash) {
+                        const hash = link.getAttribute('data-hash');
+                        if (hash) window.location.hash = hash;
+                    }
+                } else {
+                    link.classList.remove('active');
+                }
+            });
+
+            if (window.innerWidth < 992) {
+                sidebarMenu.classList.remove('show');
+            }
+        }
+
+        // Event listener klik sidebar
+        sidebarLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const pageFile = link.getAttribute('data-page');
+                loadChapter(pageFile);
+            });
+        });
+
+        // Toggle Sidebar Mobile
+        const btnToggleSidebar = document.getElementById('btnToggleSidebar');
+        if (btnToggleSidebar) {
+            btnToggleSidebar.addEventListener('click', () => {
+                sidebarMenu.classList.toggle('show');
+            });
+        }
+
+        // Copy Helper
+        function showToast(msg) {
+            const toast = document.getElementById('toastNotice');
+            const toastMsg = document.getElementById('toastMsg');
+            toastMsg.innerText = msg;
+            toast.style.display = 'flex';
+            setTimeout(() => { toast.style.display = 'none'; }, 2500);
+        }
+
+        function copyText(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                showToast(`Perintah "${text}" disalin!`);
+            });
+        }
+
+        function copyCode(button) {
+            const container = button.closest('.code-container');
+            const code = container.querySelector('code').innerText;
+            navigator.clipboard.writeText(code).then(() => {
+                const originalHtml = button.innerHTML;
+                button.innerHTML = '<i class="bi bi-check-lg text-success"></i> Tersalin!';
+                showToast('Kode berhasil disalin!');
+                setTimeout(() => { button.innerHTML = originalHtml; }, 2000);
+            });
+        }
+
+        // Live Search Filter
+        function handleSearch(query) {
+            const clean = query.toLowerCase().trim();
+            sidebarLinks.forEach(link => {
+                const text = link.innerText.toLowerCase();
+                link.style.display = (text.includes(clean) || clean === '') ? 'flex' : 'none';
+            });
+        }
+
+        const docSearch = document.getElementById('docSearch');
+        if (docSearch) docSearch.addEventListener('input', (e) => handleSearch(e.target.value));
+
+        const docSearchMobile = document.getElementById('docSearchMobile');
+        if (docSearchMobile) docSearchMobile.addEventListener('input', (e) => handleSearch(e.target.value));
+
+        // Load awal berdasarkan URL hash atau halaman pertama (01-intro.html)
+        window.addEventListener('DOMContentLoaded', () => {
+            const currentHash = window.location.hash.replace('#', '');
+            let targetPage = '01-intro.html';
+
+            if (currentHash) {
+                const matchedLink = Array.from(sidebarLinks).find(l => l.getAttribute('data-hash') === currentHash);
+                if (matchedLink) {
+                    targetPage = matchedLink.getAttribute('data-page');
+                }
+            }
+
+            loadChapter(targetPage, false);
+        });
+    </script>
+</body>
+</html>

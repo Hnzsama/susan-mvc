@@ -1,0 +1,41 @@
+<div class="hero-banner">
+    <span class="concept-pill mb-2"><i class="bi bi-signpost-split"></i> Bab 8: Peta Jalan</span>
+    <h1 class="fw-bold mb-2">Routing Expressive (routes/web.php) 🛣️</h1>
+    <p class="lead mb-0 text-slate-300">Deklarasi URL bersih, parameter dinamis <code>{id}</code>, dan pembagian HTTP Method yang rapi.</p>
+</div>
+
+<div class="baby-card">
+    <h4 class="fw-bold mb-3">Cara Mendaftarkan Rute di <code>routes/web.php</code></h4>
+
+    <div class="code-container">
+        <div class="code-header">
+            <span class="lang-badge">PHP routes/web.php</span>
+            <button class="btn-copy" onclick="copyCode(this)"><i class="bi bi-clipboard"></i> Salin</button>
+        </div>
+        <pre><code class="language-php">&lt;?php
+// Rute GET Biasa
+Route::get('/', [HomeController::class, 'index']);
+Route::get('/home', [HomeController::class, 'index']);
+
+// CRUD Produk
+Route::get('/product', [ProductController::class, 'index']);
+Route::get('/product/create', [ProductController::class, 'create']);
+Route::post('/product/store', [ProductController::class, 'store']);
+
+// Parameter Dinamis {id}
+Route::get('/product/edit/{id}', [ProductController::class, 'edit']);
+Route::post('/product/update', [ProductController::class, 'update']);
+Route::get('/product/delete/{id}', [ProductController::class, 'delete']);
+
+// Route dengan Closure (Fungsi Anonim)
+Route::get('/ping', function() {
+    echo "Pong! Susan MVC siap melayani.";
+});</code></pre>
+    </div>
+
+    <div class="analogy-box">
+        <i class="bi bi-terminal-fill me-2"></i>
+        <strong>Ingin melihat daftar rute yang aktif?</strong>
+        <br>Jalankan <code>php susan route:list</code> di terminal kapan saja!
+    </div>
+</div>

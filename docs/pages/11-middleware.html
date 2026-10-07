@@ -1,0 +1,62 @@
+<div class="hero-banner">
+    <span class="concept-pill mb-2"><i class="bi bi-person-badge"></i> Bab 11: Satpam Rute</span>
+    <h1 class="fw-bold mb-2">Middleware Pipeline (Satpam Request) 👮‍♂️</h1>
+    <p class="lead mb-0 text-slate-300">Filter setiap pengunjung sebelum mereka berhasil masuk ke dalam Controller!</p>
+</div>
+
+<div class="baby-card">
+    <div class="d-flex align-items-center gap-3 mb-3">
+        <div class="step-bubble">👮</div>
+        <div>
+            <h4 class="fw-bold mb-0">Analogikan Middleware seperti Satpam Klub Malam!</h4>
+            <small class="text-muted">Siapa yang boleh masuk dan siapa yang harus ditolak?</small>
+        </div>
+    </div>
+
+    <p>Bayangkan kamu ingin masuk ke area VIP di sebuah pesta:</p>
+    <div class="row g-3 my-2">
+        <div class="col-md-4">
+            <div class="p-3 border rounded-3 bg-light h-100">
+                <span class="badge bg-danger mb-2">1. Belum Login (Tanpa Tiket)</span>
+                <p class="small text-muted mb-0">Satpam <code>AuthMiddleware</code> menghadangmu di pintu dan menyuruhmu login dulu.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="p-3 border rounded-3 bg-light h-100">
+                <span class="badge bg-warning text-dark mb-2">2. Bukan Admin</span>
+                <p class="small text-muted mb-0">Satpam <code>AdminMiddleware</code> memeriksa gelangmu. Jika bukan admin, akses ditolak!</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="p-3 border rounded-3 bg-light h-100">
+                <span class="badge bg-success mb-2">3. Syarat Terpenuhi ($next())</span>
+                <p class="small text-muted mb-0">Satpam membuka pembatas dan mempersilakanmu masuk (Controller dieksekusi!).</p>
+            </div>
+        </div>
+    </div>
+
+    <h5 class="fw-bold mt-4 mb-2">1. Memasang Middleware pada Rute</h5>
+    <div class="code-container">
+        <div class="code-header">
+            <span class="lang-badge">PHP routes/web.php</span>
+            <button class="btn-copy" onclick="copyCode(this)"><i class="bi bi-clipboard"></i> Salin</button>
+        </div>
+        <pre><code class="language-php">// A. Single Middleware:
+Route::get('/vip-area', [VipController::class, 'index'])->middleware('auth');
+
+// B. Multi Middleware Berantai:
+Route::post('/product/store', [ProductController::class, 'store'])->middleware(['auth', 'admin']);
+
+// C. Route Grouping:
+Route::middleware(['auth'])->group(function() {
+    Route::get('/dashboard', [DashboardController::class, 'index']);
+    Route::get('/profile', [UserController::class, 'profile']);
+});</code></pre>
+    </div>
+
+    <h5 class="fw-bold mt-4 mb-2">2. Membuat Middleware Baru via CLI</h5>
+    <div class="cmd-code mb-3">
+        <span>php susan make:middleware CheckRole</span>
+        <button class="btn-copy" onclick="copyText('php susan make:middleware CheckRole')"><i class="bi bi-clipboard"></i></button>
+    </div>
+</div>
